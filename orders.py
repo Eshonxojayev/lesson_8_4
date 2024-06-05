@@ -15,8 +15,25 @@ async def orders():
     context = [
         {
             "id": order.id,
-            "user_id": order.user_id,
-            "product_id": order.product_id,
+            "user_id": {
+                "id": order.user.id,
+                "first_name": order.user.first_name,
+                "last_name": order.user.last_name,
+                "username": order.user.username,
+                "email": order.user.email,
+                "is_staff": order.user.is_staff,
+                "is_active": order.user.is_active,
+
+            },
+            "product_id": {
+                "id": order.product.id,
+                "name": order.product.name,
+                "category": {
+                    "id": order.product.categoryid,
+                    "name": order.product.category.name
+                }
+            },
+            "status": order.order_status
         }
         for order in orders
     ]
@@ -38,7 +55,8 @@ async def create(order: OrderModel):
         new_order = Order(
             id=order.id,
             user_id=order.user_id,
-            product_id=order.product_id
+            product_id=order.product_id,
+            order_status=order.order_status
         )
         session.add(new_order)
         session.commit()
